@@ -19,7 +19,7 @@ def get_cyclegan_output(input_image_path):
     opt.no_flip = True    # no flip; comment this line if results on flipped images are needed.
     opt.display_id = -1   # no visdom display; the test code saves the results to a HTML file.
     opt.dataroot = ""
-    opt.dataset_mode = "single_image"
+    opt.dataset_mode = "single_image_rembg"
     opt.input_image_path = input_image_path
     dataset = create_dataset(opt)  # create a dataset given opt.dataset_mode and other options
     model = create_model(opt)      # create a model given opt.model and other options

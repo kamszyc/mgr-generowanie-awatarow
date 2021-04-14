@@ -1,13 +1,13 @@
 from data.base_dataset import BaseDataset, get_transform
 from data.image_folder import make_dataset
-from PIL import Image
+from PIL import Image, ImageFile
+from rembg import bg
+import numpy as np
+import io
 
+ImageFile.LOAD_TRUNCATED_IMAGES = True
 
-class SingleImageDataset(BaseDataset):
-    """This dataset class can load a set of images specified by the path --dataroot /path/to/data.
-
-    It can be used for generating CycleGAN results only for one side with the model option '-model test'.
-    """
+class SingleImageRembgDataset(BaseDataset):
 
     def __init__(self, opt):
         """Initialize this dataset class.
@@ -31,7 +31,12 @@ class SingleImageDataset(BaseDataset):
             A_paths(str) - - the path of the image
         """
         A_path = self.A_paths[index]
-        A_img = Image.open(A_path).convert('RGB')
+        f = np.fromfile(A_path)
+        f_removed_bg = bg.remove(f)
+        A_img_transparent_bg = Image.open(io.BytesIO(f_removed_bg)).convert('RGBA')
+        A_img = Image.new("RGBA", A_img_transparent_bg.size, "WHITE")
+        A_img.paste(A_img_transparent_bg, (0, 0), A_img_transparent_bg)
+        A_img = A_img.convert('RGB')
         A = self.transform(A_img)
         return {'A': A, 'A_paths': A_path}
 

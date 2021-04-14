@@ -33,7 +33,8 @@ def save_image():
     if not avatar_img:
         return
     output_image_path = filedialog.asksaveasfilename(defaultextension="*.*", filetypes=[("PNG file", "*.png"), ("JPG file", "*.jpg")])
-    avatar_img.save(output_image_path)
+    if output_image_path:
+        avatar_img.save(output_image_path)
 
 root = Tk()
 root.title("Avatar generator")
