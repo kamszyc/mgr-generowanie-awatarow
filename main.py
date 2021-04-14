@@ -22,8 +22,8 @@ def load_image():
         generation_method_box["state"] = "readonly"
 
 def generate_image():
-    global input_image_path, output_image_view, avatar_img
-    avatar_img = avatar_generator.get_cyclegan_output(input_image_path)
+    global input_image_path, output_image_view, avatar_img, generation_method_box
+    avatar_img = avatar_generator.generate_avatar(generation_method_box.get(), input_image_path)
     img = ImageTk.PhotoImage(image=avatar_img)
     output_image_view.configure(image=img)
     output_image_view.image=img
@@ -50,7 +50,7 @@ ttk.Label(mainframe, textvariable=pick_method).grid(column=1, row=1, sticky=W)
 
 generation_method = StringVar()
 generation_method_box = ttk.Combobox(mainframe, state="readonly", textvariable = generation_method)
-generation_method_box["values"] = ( "CycleGAN" )
+generation_method_box["values"] = ( "CycleGAN", "AttentionGAN" )
 generation_method_box.grid(column=2, row=1)
 generation_method_box.current(newindex=0)
 generation_method_box["state"] = "disabled"
