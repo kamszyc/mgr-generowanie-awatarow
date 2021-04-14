@@ -44,6 +44,17 @@ class BaseModel(ABC):
         self.metric = 0  # used for learning rate policy 'plateau'
 
     @staticmethod
+    def dict_grad_hook_factory(add_func=lambda x: x):
+        saved_dict = dict()
+
+        def hook_gen(name):
+            def grad_hook(grad):
+                saved_vals = add_func(grad)
+                saved_dict[name] = saved_vals
+            return grad_hook
+        return hook_gen, saved_dict
+
+    @staticmethod
     def modify_commandline_options(parser, is_train):
         """Add new model-specific options, and rewrite default values for existing options.
 
@@ -88,6 +99,15 @@ class BaseModel(ABC):
             self.load_networks(load_suffix)
         self.print_networks(opt.verbose)
 
+    def parallelize(self):
+        for name in self.model_names:
+            if isinstance(name, str):
+                net = getattr(self, 'net' + name)
+                setattr(self, 'net' + name, torch.nn.DataParallel(net, self.opt.gpu_ids))
+
+    def data_dependent_initialize(self, data):
+        pass
+    
     def eval(self):
         """Make models eval mode during test time"""
         for name in self.model_names:

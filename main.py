@@ -44,14 +44,18 @@ mainframe = ttk.Frame(root, padding="3 3 12 12")
 mainframe.grid(column=0, row=0, sticky=(N, W, E, S))
 root.columnconfigure(0, weight=1)
 root.rowconfigure(0, weight=1)
+root.columnconfigure(1, weight=1)
+root.rowconfigure(1, weight=1)
+root.columnconfigure(2, weight=2)
+root.rowconfigure(2, weight=2)
 
-pick_method = StringVar(value="Pick method")
+pick_method = StringVar(value="Method:")
 ttk.Label(mainframe, textvariable=pick_method).grid(column=1, row=1, sticky=W)
 
 generation_method = StringVar()
 generation_method_box = ttk.Combobox(mainframe, state="readonly", textvariable = generation_method)
-generation_method_box["values"] = ( "CycleGAN", "AttentionGAN" )
-generation_method_box.grid(column=2, row=1)
+generation_method_box["values"] = ( "CycleGAN", "AttentionGAN", "CUT (light skin, brown hair)", "CUT (light skin, black hair)", "CUT (light skin, blond hair)", "CUT (dark skin, black hair)" )
+generation_method_box.grid(column=2, columnspan=2, row=1, sticky=NSEW)
 generation_method_box.current(newindex=0)
 generation_method_box["state"] = "disabled"
 
