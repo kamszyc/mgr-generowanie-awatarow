@@ -118,7 +118,7 @@ def generate_avatar_cut(input_image_path, epoch):
     data = next(iter(dataset))
     model.data_dependent_initialize(data)
     model.setup(opt)               # regular setup: load and print networks; create schedulers
-    model.parallelize()
+    #model.parallelize()
     if opt.eval:
         model.eval()
 
