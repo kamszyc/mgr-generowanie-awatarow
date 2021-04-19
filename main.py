@@ -71,7 +71,8 @@ ttk.Label(mainframe, textvariable=pick_method).grid(column=0, row=0, sticky=NSEW
 
 generation_method = StringVar()
 generation_method_box = ttk.Combobox(mainframe, state="readonly", textvariable = generation_method)
-generation_method_box["values"] = ( "CycleGAN", "AttentionGAN", "CUT (light skin, brown hair)", "CUT (light skin, black hair)", "CUT (light skin, blond hair)", "CUT (dark skin, black hair)" )
+generation_method_box["values"] = ( "CycleGAN", "CycleGAN + pix2pix", "AttentionGAN", "AttentionGAN + pix2pix",
+    "CUT (light skin, brown hair)", "CUT (light skin, black hair)", "CUT (light skin, blond hair)", "CUT (dark skin, black hair)" )
 generation_method_box.grid(column=1, columnspan=2, row=0, sticky=NSEW)
 generation_method_box.current(newindex=0)
 generation_method_box["state"] = "disabled"
