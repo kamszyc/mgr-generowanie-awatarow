@@ -4,7 +4,13 @@ from options.test_options_cut import TestOptionsCUT
 from data import create_dataset
 from models import create_model
 from util import util
-from PIL import Image
+from PIL import Image, ImageFile
+from neural_style_transfer import style_transfer_generate_image
+from rembg import bg
+import numpy as np
+import io
+
+ImageFile.LOAD_TRUNCATED_IMAGES = True
 
 def generate_avatar(method, input_image_path):
     if method == "CycleGAN":
@@ -23,6 +29,8 @@ def generate_avatar(method, input_image_path):
         return generate_avatar_cut(input_image_path, 72)
     elif method == "CUT (dark skin, black hair)":
         return generate_avatar_cut(input_image_path, 73)
+    elif method == "Neural style transfer (CycleGAN output as style)":
+        return generate_avatar_neural_style_transfer(input_image_path, generate_avatar_cyclegan)
     else:
         raise Exception("Unsupported method")
 
@@ -165,3 +173,14 @@ def generate_avatar_cut(input_image_path, epoch):
     im_data = visuals["fake_B"]
     im = util.tensor2im(im_data)
     return Image.fromarray(im.astype('uint8'), 'RGB')
+
+def generate_avatar_neural_style_transfer(input_image_path, generate_style_func):
+    f = np.fromfile(input_image_path)
+    f_removed_bg = bg.remove(f)
+    content_img_transparent_bg = Image.open(io.BytesIO(f_removed_bg)).convert('RGBA')
+    content_img = Image.new("RGBA", content_img_transparent_bg.size, "WHITE")
+    content_img.paste(content_img_transparent_bg, (0, 0), content_img_transparent_bg)
+    content_img = content_img.convert('RGB')
+
+    style_img = generate_style_func(input_image_path)
+    return style_transfer_generate_image(content_img, style_img)
