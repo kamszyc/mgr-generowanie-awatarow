@@ -17,7 +17,7 @@ method_to_avatar_imgs = {}
 method_to_output_image_view = {}
 method_to_save_button = {}
 
-output_image_size = 256
+image_size = 256
 
 def create_output_image_grid_cell(i, j):
     method = methods[i*3+j]
@@ -43,9 +43,11 @@ def load_image():
             output_image_view.image=""
             save_button = method_to_save_button[method]
             save_button["state"] = "disabled"
-        img = ImageTk.PhotoImage(file=input_image_path)
-        input_image_view.configure(image=img)
-        input_image_view.image=img
+        image = Image.open(input_image_path)
+        image = image.resize((image_size, image_size), Image.ANTIALIAS)
+        photoimage = ImageTk.PhotoImage(image)
+        input_image_view.configure(image=photoimage)
+        input_image_view.image=photoimage
         generate_button["state"] = "normal"
 
 def run_generate_images():
@@ -101,10 +103,10 @@ root.title("Avatar generator")
 mainframe = ttk.Frame(root, padding="3 3 12 12")
 mainframe.grid(column=0, row=0, sticky=NSEW)
 for i in range(0, 8):
-    mainframe.columnconfigure(i, minsize=output_image_size / 2)
-mainframe.rowconfigure(1, minsize=output_image_size)
-mainframe.rowconfigure(3, minsize=output_image_size)
-mainframe.rowconfigure(5, minsize=output_image_size)
+    mainframe.columnconfigure(i, minsize=image_size / 2)
+mainframe.rowconfigure(1, minsize=image_size)
+mainframe.rowconfigure(3, minsize=image_size)
+mainframe.rowconfigure(5, minsize=image_size)
 
 ttk.Label(mainframe, text="Input image").grid(column=0, columnspan=2, row=2, sticky=NSEW)
 
