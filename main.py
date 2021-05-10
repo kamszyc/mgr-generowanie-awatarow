@@ -49,7 +49,12 @@ def load_image():
             save_button = method_to_save_button[method]
             save_button["state"] = "disabled"
         image = Image.open(input_image_path)
-        image = image.resize((image_size, image_size), Image.ANTIALIAS)
+        if image.width > image_size or image.height > image_size:
+            if image.height > image.width:
+                factor = image_size / image.height
+            else:
+                factor = image_size / image.width
+            image = image.resize((int(image.width * factor), int(image.height * factor)))
         photoimage = ImageTk.PhotoImage(image)
         input_image_view.configure(image=photoimage)
         input_image_view.image=photoimage
@@ -107,6 +112,11 @@ root.title("Avatar generator")
 
 mainframe = ttk.Frame(root, padding="3 3 12 12")
 mainframe.grid(column=0, row=0, sticky=NSEW)
+for i in range(0, 8):
+    mainframe.columnconfigure(i, minsize=image_size / 2)
+mainframe.rowconfigure(1, minsize=image_size)
+mainframe.rowconfigure(3, minsize=image_size)
+mainframe.rowconfigure(5, minsize=image_size)
 
 white_photoimage = ImageTk.PhotoImage(white_image)
 
