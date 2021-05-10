@@ -9,7 +9,7 @@ import threading
 
 methods = ["CycleGAN", "CycleGAN + pix2pix", "AttentionGAN", "AttentionGAN + pix2pix",
     "CUT (light skin, brown hair)", "CUT (light skin, black hair)", "CUT (light skin, blond hair)", "CUT (dark skin, black hair)",
-    "Neural style transfer (CycleGAN output as style)"]
+    "Neural style transfer (AttentionGAN style)"]
 
 input_image_path = None
 

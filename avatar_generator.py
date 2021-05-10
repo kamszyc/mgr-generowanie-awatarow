@@ -29,8 +29,8 @@ def generate_avatar(method, input_image_path):
         return generate_avatar_cut(input_image_path, 72)
     elif method == "CUT (dark skin, black hair)":
         return generate_avatar_cut(input_image_path, 73)
-    elif method == "Neural style transfer (CycleGAN output as style)":
-        return generate_avatar_neural_style_transfer(input_image_path, generate_avatar_cyclegan)
+    elif method == "Neural style transfer (AttentionGAN style)":
+        return generate_avatar_neural_style_transfer(input_image_path, generate_avatar_attentiongan)
     else:
         raise Exception("Unsupported method")
 
