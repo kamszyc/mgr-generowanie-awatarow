@@ -19,6 +19,9 @@ method_to_save_button = {}
 
 image_size = 256
 
+white_image = Image.new("RGB", (image_size, image_size), (255, 255, 255))
+white_photoimage = None
+
 def create_output_image_grid_cell(i, j):
     method = methods[i*3+j]
     ttk.Label(mainframe, text=method + " output").grid(column=2*j+2, row=2*i, sticky=NSEW)
@@ -30,6 +33,8 @@ def create_output_image_grid_cell(i, j):
 
     output_image_view = ttk.Label(mainframe)
     output_image_view.grid(column=2*j+2, columnspan=2, row=2*i+1, sticky=NSEW)
+    output_image_view.configure(image=white_photoimage)
+    output_image_view.image=white_photoimage
 
     method_to_output_image_view[method] = output_image_view
 
@@ -39,8 +44,8 @@ def load_image():
     if input_image_path:
         for method in methods:
             output_image_view = method_to_output_image_view[method]
-            output_image_view.configure(image="")
-            output_image_view.image=""
+            output_image_view.configure(image=white_photoimage)
+            output_image_view.image=white_photoimage
             save_button = method_to_save_button[method]
             save_button["state"] = "disabled"
         image = Image.open(input_image_path)
@@ -56,8 +61,8 @@ def run_generate_images():
     generate_button["state"] = "disabled"
     for method in methods:
         output_image_view = method_to_output_image_view[method]
-        output_image_view.configure(image="")
-        output_image_view.image=""
+        output_image_view.configure(image=white_photoimage)
+        output_image_view.image=white_photoimage
         save_button = method_to_save_button[method]
         save_button["state"] = "disabled"
     progress_bar.start(5)
@@ -102,16 +107,15 @@ root.title("Avatar generator")
 
 mainframe = ttk.Frame(root, padding="3 3 12 12")
 mainframe.grid(column=0, row=0, sticky=NSEW)
-for i in range(0, 8):
-    mainframe.columnconfigure(i, minsize=image_size / 2)
-mainframe.rowconfigure(1, minsize=image_size)
-mainframe.rowconfigure(3, minsize=image_size)
-mainframe.rowconfigure(5, minsize=image_size)
+
+white_photoimage = ImageTk.PhotoImage(white_image)
 
 ttk.Label(mainframe, text="Input image").grid(column=0, columnspan=2, row=2, sticky=NSEW)
 
 input_image_view = ttk.Label(mainframe)
 input_image_view.grid(column=0, columnspan=2, row=3, sticky=NSEW)
+input_image_view.configure(image=white_photoimage)
+input_image_view.image=white_photoimage
 
 load_button = ttk.Button(mainframe, text="Load", command=load_image)
 load_button.grid(column=0, row=4, sticky=NSEW)
