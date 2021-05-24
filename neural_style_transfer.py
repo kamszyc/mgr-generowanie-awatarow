@@ -15,7 +15,7 @@ import copy
 
 from torchvision.utils import save_image, make_grid
 
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+device = torch.device("cpu")
 
 # desired size of the output image
 imsize = (256, 256)
@@ -232,7 +232,10 @@ def convert_to_image(
     im = Image.fromarray(ndarr)
     return im
 
-def style_transfer_generate_image(content_img, style_img):
+def style_transfer_generate_image(content_img, style_img, selected_mode):
+    global device
+    device = torch.device(selected_mode)
+    
     content_img = image_loader_from_image(content_img)
     style_img = image_loader_from_image(style_img)
 

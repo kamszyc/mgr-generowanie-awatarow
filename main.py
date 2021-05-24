@@ -6,6 +6,7 @@ import os
 import shutil
 import avatar_generator
 import threading
+import torch
 
 methods = ["CycleGAN", "CycleGAN + pix2pix", "AttentionGAN", "AttentionGAN + pix2pix",
     "CUT (light skin, brown hair)", "CUT (light skin, black hair)", "CUT (light skin, blond hair)", "CUT (dark skin, black hair)",
@@ -64,6 +65,8 @@ def run_generate_images():
     global load_button, generate_button
     load_button["state"] = "disabled"
     generate_button["state"] = "disabled"
+    for r in radiobuttons:
+        r["state"] = "disabled"
     for method in methods:
         output_image_view = method_to_output_image_view[method]
         output_image_view.configure(image=white_photoimage)
@@ -75,9 +78,9 @@ def run_generate_images():
     t.start()
 
 def generate_images():
-    global method_to_avatar_imgs, root
+    global method_to_avatar_imgs, root, selected_mode
     for method in methods:
-        method_to_avatar_imgs[method] = avatar_generator.generate_avatar(method, input_image_path)
+        method_to_avatar_imgs[method] = avatar_generator.generate_avatar(method, input_image_path, selected_mode.get())
         root.after(0, lambda method = method:after_generate_one_image(method))
     root.after(0, after_generate_all_images)
     
@@ -94,6 +97,8 @@ def after_generate_one_image(method):
 def after_generate_all_images():
     load_button["state"] = "normal"
     generate_button["state"] = "normal"
+    for r in radiobuttons:
+        r["state"] = "normal"
     progress_bar.stop()
 
 
@@ -117,6 +122,33 @@ for i in range(0, 8):
 mainframe.rowconfigure(1, minsize=image_size)
 mainframe.rowconfigure(3, minsize=image_size)
 mainframe.rowconfigure(5, minsize=image_size)
+
+radiobuttons = []
+selected_mode = StringVar()
+
+radio_cuda = ttk.Radiobutton(
+    mainframe,
+    text='GPU (CUDA) mode',
+    value='cuda',
+    variable=selected_mode
+)
+radio_cuda.grid(column=0, row=0, sticky=NW)
+
+radio_cpu = ttk.Radiobutton(
+    mainframe,
+    text='CPU mode',
+    value='cpu',
+    variable=selected_mode
+)
+radio_cpu.grid(column=0, row=1, sticky=NW)
+
+if torch.cuda.is_available():
+    selected_mode.set('cuda')
+    radiobuttons.append(radio_cuda)
+else:
+    radio_cuda["state"] = "disabled"
+    selected_mode.set('cpu')
+radiobuttons.append(radio_cpu)
 
 white_photoimage = ImageTk.PhotoImage(white_image)
 
