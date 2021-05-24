@@ -129,3 +129,4 @@ dmypy.json
 .pyre/
 
 checkpoints/experiment_name/
+.vscode/settings.json
