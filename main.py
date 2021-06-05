@@ -1,12 +1,13 @@
 from tkinter import *
 from tkinter import ttk
-from tkinter import filedialog
+from tkinter import filedialog, messagebox
 from PIL import ImageTk, Image
 import os
 import shutil
 import avatar_generator
 import threading
 import torch
+import traceback
 
 methods = ["CycleGAN", "CycleGAN + pix2pix", "AttentionGAN", "AttentionGAN + pix2pix",
     "CUT (light skin, brown hair)", "CUT (light skin, black hair)", "CUT (light skin, blond hair)", "CUT (dark skin, black hair)",
@@ -80,8 +81,12 @@ def run_generate_images():
 def generate_images():
     global method_to_avatar_imgs, root, selected_mode
     for method in methods:
-        method_to_avatar_imgs[method] = avatar_generator.generate_avatar(method, input_image_path, selected_mode.get())
-        root.after(0, lambda method = method:after_generate_one_image(method))
+        try:
+            method_to_avatar_imgs[method] = avatar_generator.generate_avatar(method, input_image_path, selected_mode.get())
+            root.after(0, lambda method = method:after_generate_one_image(method))
+        except:
+            exception_str = traceback.format_exc()
+            messagebox.showerror("Error", f"Error happened during generating avatar with {method}: \n" + exception_str)
     root.after(0, after_generate_all_images)
     
 
