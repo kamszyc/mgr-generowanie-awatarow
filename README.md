@@ -1,4 +1,4 @@
-# Generowanie avatarów - praca magisterska
+# Generowanie awatarów na podstawie zdjęć - praca magisterska
 
 Oparte na kodach źródłowych: \
 https://github.com/junyanz/pytorch-CycleGAN-and-pix2pix \
